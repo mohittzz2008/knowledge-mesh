@@ -372,6 +372,35 @@ export default function DashboardPage() {
                   </div>
                 )}
               </div>
+
+              {/* CodeChef */}
+              <div className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-slate-800 text-amber-500">
+                    <Sparkles className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <span className="font-bold text-white block">CodeChef Connector</span>
+                    <span className="text-slate-400 text-[11px]">
+                      {userProfile?.connected_platforms?.find(p => p.platform === 'CodeChef')?.connected 
+                        ? `Connected (${userProfile.connected_platforms.find(p => p.platform === 'CodeChef')?.username})` 
+                        : 'Public Rating & Star Tier'}
+                    </span>
+                  </div>
+                </div>
+                {userProfile?.connected_platforms?.find(p => p.platform === 'CodeChef')?.connected || (userProfile?.platform_counts?.CodeChef || 0) > 0 ? (
+                  <div className="text-right">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px]">
+                      <Check className="h-3 w-3" /> Connected
+                    </span>
+                    <span className="text-[10px] text-slate-400 block mt-1">{userProfile?.platform_counts?.CodeChef || 0} evidence items</span>
+                  </div>
+                ) : (
+                  <Link href="/platforms" className="px-3 py-1 rounded-lg bg-purple-600 text-white text-[11px] font-bold">
+                    Connect
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
 

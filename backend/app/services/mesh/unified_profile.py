@@ -23,7 +23,7 @@ class UnifiedProfileService:
         conn_dict = {c.platform: c for c in connections}
 
         platforms_summary = []
-        for plt_name in ["GitHub", "LeetCode", "HackerRank"]:
+        for plt_name in ["GitHub", "LeetCode", "HackerRank", "CodeChef"]:
             c = conn_dict.get(plt_name)
             platforms_summary.append({
                 "platform": plt_name,
@@ -42,7 +42,7 @@ class UnifiedProfileService:
         
         seen_ids = set()
         deduped_evidence = []
-        platform_counts = {"GitHub": 0, "LeetCode": 0, "HackerRank": 0, "CodeLab": 0}
+        platform_counts = {"GitHub": 0, "LeetCode": 0, "HackerRank": 0, "CodeChef": 0, "CodeLab": 0}
 
         for ev in evidence_items:
             ext_id = ev.external_id or ev.id
@@ -110,7 +110,7 @@ class UnifiedProfileService:
         skills_summary = []
         for a in assessments:
             slug = a.skill.slug
-            sources_count = {"GitHub": 0, "LeetCode": 0, "HackerRank": 0, "CodeLab": 0}
+            sources_count = {"GitHub": 0, "LeetCode": 0, "HackerRank": 0, "CodeChef": 0, "CodeLab": 0}
 
             skill_evs = evidence_by_skill.get(slug, set())
             for ev in skill_evs:

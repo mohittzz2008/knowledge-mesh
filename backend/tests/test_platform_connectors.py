@@ -5,11 +5,12 @@ from unittest.mock import AsyncMock, patch
 from app.services.platform.registry import PlatformRegistry
 from app.services.platform.leetcode import LeetCodeConnector
 from app.services.platform.hackerrank import HackerRankConnector
+from app.services.platform.codechef import CodeChefConnector
 
 
 def test_platform_registry_lookup():
     items = PlatformRegistry.list_items()
-    assert len(items) >= 3
+    assert len(items) >= 4
 
     gh_item = PlatformRegistry.get_item("github")
     assert gh_item is not None
@@ -22,6 +23,82 @@ def test_platform_registry_lookup():
     hr_item = PlatformRegistry.get_item("hackerrank")
     assert hr_item is not None
     assert hr_item.name == "HackerRank"
+
+    cc_item = PlatformRegistry.get_item("codechef")
+    assert cc_item is not None
+    assert cc_item.name == "CodeChef"
+
+
+@pytest.mark.asyncio
+async def test_codechef_connector_mocked():
+    connector = CodeChefConnector()
+
+    mock_profile_html = """
+    <html>
+      <body>
+        <div class="user-name">demo_chef_user</div>
+        <div class="rating-header">
+          <div class="rating-number">1850</div>
+          <small>(Highest Rating 1920)</small>
+          <div class="rating-star">4★</div>
+        </div>
+        <section class="rating-data-section problems-solved">
+          <h3>Total Problems Solved: 2</h3>
+          <div class="content">
+            <p>
+              <span><span style="font-size: 12px";>Jawbreaker</span>,&nbsp;<span style="font-size: 12px";>Closest Ranking</span></span>
+            </p>
+          </div>
+        </section>
+      </body>
+    </html>
+    """
+
+    with patch("httpx.AsyncClient.get", new=AsyncMock(return_value=AsyncMock(status_code=200, text=mock_profile_html))):
+        is_valid = await connector.validate_identity("demo_chef_user")
+        assert is_valid is True
+
+        profile = await connector.fetch_profile("demo_chef_user")
+        assert profile is not None
+        assert profile["username"] == "demo_chef_user"
+        assert profile["rating"] == 1850
+        assert profile["highest_rating"] == 1920
+        assert profile["stars"] == "4★"
+        assert profile["total_solved"] == 2
+        assert "JAWBREAKER" in profile["solved_codes"]
+        assert "CLOSESTRANKING" in profile["solved_codes"]
+
+        evidence = await connector.fetch_evidence("demo_chef_user")
+        assert len(evidence) >= 4 # profile + badge + 2 solved problems
+
+        norm_prof = connector.normalize_evidence(evidence[0])
+        assert norm_prof["platform"] == "CodeChef"
+        assert "Competitive Programming" in norm_prof["normalized_payload"]["skills"]
+
+        norm_prob = connector.normalize_evidence({"type": "codechef_solved_problem", "data": {"username": "demo_chef_user", "problem_code": "JAWBREAKER", "problem_title": "Jawbreaker"}})
+        assert norm_prob["source_url"] == "https://www.codechef.com/problems/JAWBREAKER"
+        assert norm_prob["title"] == "CodeChef Solved Challenge: Jawbreaker"
+
+
+@pytest.mark.asyncio
+async def test_codechef_empty_and_malformed_solved_problems():
+    connector = CodeChefConnector()
+
+    empty_html = "<html><body><div class='rating-number'>1200</div></body></html>"
+    with patch("httpx.AsyncClient.get", new=AsyncMock(return_value=AsyncMock(status_code=200, text=empty_html))):
+        prof = await connector.fetch_profile("empty_user")
+        assert prof is not None
+        assert prof["solved_codes"] == []
+        assert prof["total_solved"] == 0
+
+    malformed_html = "<html><body><section class='problems-solved'><h3>Malformed Data</h3></section></body></html>"
+    with patch("httpx.AsyncClient.get", new=AsyncMock(return_value=AsyncMock(status_code=200, text=malformed_html))):
+        prof_malformed = await connector.fetch_profile("malformed_user")
+        assert prof_malformed is not None
+        assert prof_malformed["solved_codes"] == []
+        assert prof_malformed["total_solved"] == 0
+
+
 
 
 @pytest.mark.asyncio

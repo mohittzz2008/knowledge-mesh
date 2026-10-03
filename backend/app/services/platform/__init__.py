@@ -7,11 +7,30 @@ from app.services.platform.hackerrank import HackerRankConnector
 from app.services.platform.codeforces import CodeforcesConnector
 from app.services.platform.exercism import ExercismConnector
 from app.services.platform.atcoder import AtCoderConnector
+from app.services.platform.codechef import CodeChefConnector
 from app.services.platform.registry import (
     PlatformRegistry,
     PlatformRegistryItem,
     PlatformCapability,
     PlatformStatus,
+)
+
+# Register CodeChef Connector
+PlatformRegistry.register(
+    PlatformRegistryItem(
+        key="codechef",
+        name="CodeChef",
+        connector_class=CodeChefConnector,
+        capabilities=[
+            PlatformCapability.PUBLIC_PROFILE,
+            PlatformCapability.PUBLIC_SUBMISSIONS,
+            PlatformCapability.PUBLIC_PROBLEM_HISTORY,
+        ],
+        status=PlatformStatus.AVAILABLE,
+        auth_type="username_public",
+        data_scope_description="Public profile rating, star tier (1★ to 7★), global rank, and solved problem codes.",
+        documentation_url="https://www.codechef.com",
+    )
 )
 
 # Register GitHub Connector
@@ -129,8 +148,10 @@ __all__ = [
     "CodeforcesConnector",
     "ExercismConnector",
     "AtCoderConnector",
+    "CodeChefConnector",
     "PlatformRegistry",
     "PlatformRegistryItem",
     "PlatformCapability",
     "PlatformStatus",
 ]
+

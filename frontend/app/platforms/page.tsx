@@ -380,6 +380,7 @@ export default function PlatformsPage() {
                       syncResult.platform === 'Exercism' ? 'Exercism API v2' :
                       syncResult.platform === 'AtCoder' ? 'AtCoderProblems API' :
                       syncResult.platform === 'HackerRank' ? 'HackerRank REST API' :
+                      syncResult.platform === 'CodeChef' ? 'CodeChef Public Telemetry' :
                       'Platform API'
                     }</span></div>
                   </div>

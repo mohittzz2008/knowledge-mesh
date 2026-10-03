@@ -17,7 +17,7 @@ from app.services.mesh.relationship_engine import seed_controlled_skills_and_rel
 
 # Platforms whose Evidence rows count toward the EXTERNAL developer profile.
 # CodeLab is intentionally excluded.
-EXTERNAL_PLATFORMS = {"GitHub", "LeetCode", "HackerRank"}
+EXTERNAL_PLATFORMS = {"GitHub", "LeetCode", "HackerRank", "CodeChef"}
 
 # Concept string to Skill slug mapping
 CONCEPT_TO_SKILL_SLUG = {
@@ -50,7 +50,9 @@ CONCEPT_TO_SKILL_SLUG = {
     "Async Programming": "async-programming",
     "Algorithms": "problem-solving",
     "Problem Solving": "problem-solving",
+    "Competitive Programming": "problem-solving",
     "Data Structures": "lists",
+    "Math": "problem-solving",
     "Python": "python",
     "python": "python",
     "C": "c",

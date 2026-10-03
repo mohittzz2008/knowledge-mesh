@@ -20,7 +20,7 @@ export interface HealthCheckResponse {
 }
 
 export interface PlatformConnectPayload {
-  platform: 'LeetCode' | 'GitHub' | 'HackerRank';
+  platform: 'LeetCode' | 'GitHub' | 'HackerRank' | 'CodeChef';
   authType: 'username_public' | 'oauth_token';
   identifier: string; // username or auth code
 }
@@ -232,6 +232,7 @@ export interface PracticeRecommendation {
   title: string;
   url?: string;
   difficulty: string;
+  target_difficulty?: string;
   topics: string[];
   target_skill_slug: string;
   reason: string;

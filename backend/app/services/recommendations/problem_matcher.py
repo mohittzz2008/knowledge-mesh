@@ -1,10 +1,14 @@
 """Problem Matcher & Practice Ranking Service."""
 
-from typing import Any
+from typing import Any, Optional
 from sqlalchemy.orm import Session
+
 from app.models.problem import Problem, ProblemRecommendation, CodeAttempt
+from app.models.evidence import Evidence
+
 
 CONTROLLED_PRACTICE_PROBLEMS = [
+
     {
         "platform": "GitHub",
         "external_id": "gh_rec_01",
@@ -245,6 +249,174 @@ CONTROLLED_PRACTICE_PROBLEMS = [
         "source": "AtCoder Platform Reference",
         "skills": ["math", "beginner", "algorithms"],
     },
+    {
+        "platform": "CodeChef",
+        "external_id": "cc_flow001",
+        "title": "Add Two Numbers (FLOW001)",
+        "url": "https://www.codechef.com/problems/FLOW001",
+        "difficulty": "Easy",
+        "topics": ["Math", "Fundamentals"],
+        "language": "Python",
+        "description": "Calculate the sum of two integers across multiple test cases.",
+        "source": "CodeChef Practice Challenge",
+        "skills": ["functions", "math", "problem-solving"],
+    },
+    {
+        "platform": "CodeChef",
+        "external_id": "cc_atm",
+        "title": "ATM (ATM)",
+        "url": "https://www.codechef.com/problems/ATM",
+        "difficulty": "Easy",
+        "topics": ["Conditionals", "Fundamentals"],
+        "language": "Python",
+        "description": "Pooja wants to withdraw X $US from an ATM. Calculate account balance after withdrawal.",
+        "source": "CodeChef Practice Challenge",
+        "skills": ["functions", "problem-solving"],
+    },
+    {
+        "platform": "CodeChef",
+        "external_id": "cc_tsort",
+        "title": "Turbo Sort (TSORT)",
+        "url": "https://www.codechef.com/problems/TSORT",
+        "difficulty": "Easy",
+        "topics": ["Sorting", "Arrays"],
+        "language": "Python",
+        "description": "Given a list of numbers, output numbers in non-decreasing order.",
+        "source": "CodeChef Practice Challenge",
+        "skills": ["arrays", "problem-solving"],
+    },
+    {
+        "platform": "CodeChef",
+        "external_id": "cc_luckfour",
+        "title": "Lucky Four (LUCKFOUR)",
+        "url": "https://www.codechef.com/problems/LUCKFOUR",
+        "difficulty": "Easy",
+        "topics": ["Iteration", "Strings", "Fundamentals"],
+        "language": "Python",
+        "description": "Count the occurrences of digit 4 in given integer inputs.",
+        "source": "CodeChef Practice Challenge",
+        "skills": ["iteration", "problem-solving"],
+    },
+    {
+        "platform": "CodeChef",
+        "external_id": "cc_flow006",
+        "title": "Sum of Digits (FLOW006)",
+        "url": "https://www.codechef.com/problems/FLOW006",
+        "difficulty": "Easy",
+        "topics": ["Math", "Iteration"],
+        "language": "Python",
+        "description": "Calculate the sum of digits of a given integer.",
+        "source": "CodeChef Practice Challenge",
+        "skills": ["iteration", "problem-solving"],
+    },
+    {
+        "platform": "CodeChef",
+        "external_id": "cc_conflip",
+        "title": "Coin Flip (CONFLIP)",
+        "url": "https://www.codechef.com/problems/CONFLIP",
+        "difficulty": "Medium",
+        "topics": ["Math", "Game Theory", "Algorithms"],
+        "language": "Python",
+        "description": "Determine the count of coins facing head or tail after N rounds of flipping.",
+        "source": "CodeChef Practice Challenge",
+        "skills": ["iteration", "problem-solving"],
+    },
+    {
+        "platform": "CodeChef",
+        "external_id": "cc_csub",
+        "title": "Count Substrings (CSUB)",
+        "url": "https://www.codechef.com/problems/CSUB",
+        "difficulty": "Medium",
+        "topics": ["Combinatorics", "Strings", "Arrays"],
+        "language": "Python",
+        "description": "Count the number of non-empty substrings starting and ending with 1.",
+        "source": "CodeChef Practice Challenge",
+        "skills": ["arrays", "problem-solving"],
+    },
+    {
+        "platform": "CodeChef",
+        "external_id": "cc_cleanup",
+        "title": "Cleaning Up (CLEANUP)",
+        "url": "https://www.codechef.com/problems/CLEANUP",
+        "difficulty": "Medium",
+        "topics": ["Arrays", "Sorting", "Greedy"],
+        "language": "Python",
+        "description": "Distribute unfinished jobs alternately between Chef and his assistant.",
+        "source": "CodeChef Practice Challenge",
+        "skills": ["arrays", "problem-solving"],
+    },
+    {
+        "platform": "CodeChef",
+        "external_id": "cc_marcha1",
+        "title": "Paying up (MARCHA1)",
+        "url": "https://www.codechef.com/problems/MARCHA1",
+        "difficulty": "Medium",
+        "topics": ["Recursion", "Bit Manipulation", "Subset Sum"],
+        "language": "Python",
+        "description": "Determine if a subset of banknotes sums up to the exact requested ransom amount.",
+        "source": "CodeChef Practice Challenge",
+        "skills": ["recursion", "problem-solving"],
+    },
+    {
+        "platform": "CodeChef",
+        "external_id": "cc_firesc",
+        "title": "Fire Escape Routes (FIRESC)",
+        "url": "https://www.codechef.com/problems/FIRESC",
+        "difficulty": "Medium",
+        "topics": ["Graph Algorithms", "DFS", "Connected Components"],
+        "language": "Python",
+        "description": "Find connected components and calculate escape routes in a friendship graph.",
+        "source": "CodeChef Practice Challenge",
+        "skills": ["graph-algorithms", "dfs"],
+    },
+    {
+        "platform": "CodeChef",
+        "external_id": "cc_prime1",
+        "title": "Prime Generator (PRIME1)",
+        "url": "https://www.codechef.com/problems/PRIME1",
+        "difficulty": "Hard",
+        "topics": ["Math", "Number Theory", "Sieve"],
+        "language": "Python",
+        "description": "Generate all prime numbers between two given numbers using segmented sieve.",
+        "source": "CodeChef Practice Challenge",
+        "skills": ["iteration", "problem-solving"],
+    },
+    {
+        "platform": "CodeChef",
+        "external_id": "cc_treeroot",
+        "title": "Tree Root (TREEROOT)",
+        "url": "https://www.codechef.com/problems/TREEROOT",
+        "difficulty": "Hard",
+        "topics": ["Tree Traversal", "Math", "Trees"],
+        "language": "Python",
+        "description": "Determine the root of a binary tree given node values and subtree sums.",
+        "source": "CodeChef Practice Challenge",
+        "skills": ["tree-traversal", "recursion"],
+    },
+    {
+        "platform": "CodeChef",
+        "external_id": "cc_digjump",
+        "title": "Digit Jump (DIGJUMP)",
+        "url": "https://www.codechef.com/problems/DIGJUMP",
+        "difficulty": "Hard",
+        "topics": ["Graph Algorithms", "BFS", "Shortest Path"],
+        "language": "Python",
+        "description": "Find minimum steps to jump from first to last index using digit matching graph BFS.",
+        "source": "CodeChef Practice Challenge",
+        "skills": ["graph-algorithms", "dfs"],
+    },
+    {
+        "platform": "CodeChef",
+        "external_id": "cc_mchef",
+        "title": "MasterChef (MCHEF)",
+        "url": "https://www.codechef.com/problems/MCHEF",
+        "difficulty": "Hard",
+        "topics": ["Dynamic Programming", "Knapsack", "Segment Tree"],
+        "language": "Python",
+        "description": "Optimize dish ratings under budget constraints using interval updates and dynamic programming.",
+        "source": "CodeChef Practice Challenge",
+        "skills": ["graph-algorithms", "recursion"],
+    },
 ]
 
 
@@ -275,18 +447,92 @@ class ProblemMatcherService:
         return problems
 
     def get_ranked_recommendations(
-        self, user_id: str, target_skill_slug: str, db: Session, limit: int = 5
+        self,
+        user_id: str,
+        target_skill_slug: str,
+        db: Session,
+        target_difficulty: Optional[str] = None,
+        limit: int = 5,
     ) -> list[dict[str, Any]]:
-        """Rank and return practice recommendations for a target skill."""
+        """Rank and return practice recommendations for a target skill with adaptive difficulty."""
         problems = self.seed_problems(db)
 
-        # Query completed attempts for user
+        # Derive target difficulty from SkillAssessment.mastery_score if not explicitly provided
+        if not target_difficulty or target_difficulty == "Adaptive":
+            from app.models.skill import Skill, SkillAssessment
+            target_skill = db.query(Skill).filter(Skill.slug == target_skill_slug).first()
+            mastery = 0.0
+            if target_skill:
+                ass = (
+                    db.query(SkillAssessment)
+                    .filter(
+                        SkillAssessment.user_id == user_id,
+                        SkillAssessment.skill_id == target_skill.id,
+                    )
+                    .first()
+                )
+                if ass:
+                    mastery = ass.mastery_score
+
+            if mastery < 30.0:
+                target_difficulty = "Easy"
+            elif mastery < 75.0:
+                target_difficulty = "Medium"
+            else:
+                target_difficulty = "Hard"
+
+        # Difficulty scale mapping for distance calculation
+        DIFFICULTY_MAP = {
+            "easy": 0,
+            "medium": 1,
+            "hard": 2,
+            "adaptive": 0,
+        }
+        target_diff_val = DIFFICULTY_MAP.get(target_difficulty.lower(), 0)
+
+        # Query completed internal attempts for user
         attempts = (
             db.query(CodeAttempt)
             .filter(CodeAttempt.user_id == user_id, CodeAttempt.status == "completed")
             .all()
         )
         completed_problem_ids = set(a.problem_id for a in attempts)
+
+        # Query external solved evidence records for user
+        ev_records = (
+            db.query(Evidence)
+            .filter(
+                Evidence.user_id == user_id,
+                Evidence.evidence_type == "problem_submission"
+            )
+            .all()
+        )
+
+        externally_solved_identifiers = set()
+        for ev in ev_records:
+            payload = ev.normalized_payload or {}
+            raw_payload = ev.raw_payload or {}
+
+            # CodeChef problem code
+            codechef_code = payload.get("problem_code") or raw_payload.get("problem_code")
+            if codechef_code:
+                code_str = str(codechef_code).strip()
+                externally_solved_identifiers.add(code_str.upper())
+                externally_solved_identifiers.add(code_str.lower())
+                externally_solved_identifiers.add(f"cc_{code_str.lower()}")
+
+            # LeetCode / HackerRank / General slugs
+            slug = payload.get("challenge_slug") or payload.get("title_slug") or payload.get("problem_slug") or payload.get("slug")
+            if slug:
+                slug_str = str(slug).strip().lower()
+                externally_solved_identifiers.add(slug_str)
+
+            # URL slug matching if present
+            source_url = payload.get("source_url") or raw_payload.get("source_url") or ev.title
+            if source_url:
+                url_slug = source_url.rstrip("/").split("/")[-1].replace("problem", "").strip("/").lower()
+                if url_slug:
+                    externally_solved_identifiers.add(url_slug)
 
         # Query active platform connections for user to prioritize recommendations
         from app.models.platform import PlatformConnection
@@ -299,14 +545,27 @@ class ProblemMatcherService:
 
         recommendations = []
         for p in problems:
+            # 1. Exclude internal completed CodeAttempt problems
             if p.id in completed_problem_ids:
+                continue
+
+            # 2. Exclude externally solved Evidence problems
+            p_code = p.external_id.replace("cc_", "").replace("lc_", "").replace("hr_", "").strip().upper()
+            p_url_slug = p.url.rstrip("/").split("/")[-1].replace("problem", "").strip("/").lower()
+            p_ext_id = p.external_id.strip().lower()
+
+            if (
+                p_code in externally_solved_identifiers
+                or p_url_slug in externally_solved_identifiers
+                or p_ext_id in externally_solved_identifiers
+            ):
                 continue
 
             topics_dict = p.topics or {}
             skills_list = topics_dict.get("skills", [])
 
             if target_skill_slug in skills_list or target_skill_slug == "all":
-                is_real_data = p.platform in ["GitHub", "Exercism", "AtCoder", "HackerRank", "LeetCode"]
+                is_real_data = p.platform in ["GitHub", "Exercism", "AtCoder", "HackerRank", "LeetCode", "CodeChef"]
                 status_label = "REAL API DATA" if is_real_data else "PLANNED CONNECTOR"
 
                 recommendations.append({
@@ -323,6 +582,17 @@ class ProblemMatcherService:
                     "is_real_data": is_real_data,
                 })
 
-        # Prioritize matching user's connected platforms
-        recommendations.sort(key=lambda r: 0 if r["platform"] in user_platforms else 1)
+        # Multi-factor adaptive ranking:
+        # Primary factor: Difficulty distance (lower is better, exact match = 0)
+        # Secondary factor: Connected platform bonus (subtracts 0.5 from distance score if connected)
+        def compute_rank_score(r: dict[str, Any]) -> float:
+            prob_diff_str = str(r.get("difficulty", "Easy")).lower()
+            prob_diff_val = DIFFICULTY_MAP.get(prob_diff_str, 0)
+            diff_distance = abs(target_diff_val - prob_diff_val)
+            platform_bonus = 0.5 if (r["platform"] in user_platforms) else 0.0
+            return float(diff_distance) - platform_bonus
+
+        recommendations.sort(key=compute_rank_score)
         return recommendations[:limit]
+
+

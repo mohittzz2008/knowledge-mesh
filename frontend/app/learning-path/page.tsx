@@ -168,6 +168,7 @@ export default function LearningPathPage() {
                   const hasLeetCode = step.why?.includes('LeetCode');
                   const hasHackerRank = step.why?.includes('HackerRank');
                   const hasGitHub = step.why?.includes('GitHub');
+                  const hasCodeChef = step.why?.includes('CodeChef');
 
                   return (
                     <motion.div 
@@ -252,7 +253,7 @@ export default function LearningPathPage() {
                             {step.why}
                           </p>
 
-                          {/* Platform Provenance Badges (Parsed from Step Evidence) */}
+                          {/* Platform Provenance Badges */}
                           <div className="flex items-center gap-1.5 pt-0.5 flex-wrap">
                             {hasLeetCode && (
                               <span className="inline-flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-950/40 text-amber-300 border border-amber-500/30">
@@ -262,6 +263,11 @@ export default function LearningPathPage() {
                             {hasHackerRank && (
                               <span className="inline-flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-950/40 text-emerald-300 border border-emerald-500/30">
                                 <Database className="h-2.5 w-2.5" /> HackerRank
+                              </span>
+                            )}
+                            {hasCodeChef && (
+                              <span className="inline-flex items-center gap-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-950/40 text-amber-400 border border-amber-500/30">
+                                <Sparkles className="h-2.5 w-2.5" /> CodeChef
                               </span>
                             )}
                             {hasGitHub && (
@@ -377,51 +383,74 @@ export default function LearningPathPage() {
 
                   {recommendations.length > 0 ? (
                     <div className="space-y-2.5 max-h-[480px] overflow-y-auto pr-0.5">
-                      {recommendations.map((rec) => (
-                        <div 
-                          key={rec.problem_id} 
-                          className="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800/90 hover:border-cyan-500/40 transition-all space-y-2 font-mono text-xs"
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="text-cyan-400 font-bold text-[11px] flex items-center gap-1">
-                              <Code2 className="h-3 w-3" /> {rec.platform}
-                            </span>
-                            <span className={`text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${
-                              rec.is_real_data 
-                                ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' 
-                                : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
-                            }`}>
-                              {rec.status_label}
-                            </span>
-                          </div>
+                      {recommendations.map((rec) => {
+                        const targetDiff = rec.target_difficulty || (selectedStep ? (selectedStep.mastery < 30 ? 'Easy' : selectedStep.mastery < 75 ? 'Medium' : 'Hard') : rec.difficulty);
+                        const isSoftFallback = targetDiff.toLowerCase() !== rec.difficulty.toLowerCase();
 
-                          <h4 className="text-white font-bold text-xs leading-snug">
-                            {rec.title}
-                          </h4>
-                          
-                          <p className="text-slate-400 text-[11px] leading-relaxed">
-                            {rec.reason}
-                          </p>
+                        return (
+                          <div 
+                            key={rec.problem_id} 
+                            className="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800/90 hover:border-cyan-500/40 transition-all space-y-2 font-mono text-xs"
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-cyan-400 font-bold text-[11px] flex items-center gap-1">
+                                <Code2 className="h-3 w-3" /> {rec.platform}
+                              </span>
+                              <span className={`text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${
+                                rec.is_real_data 
+                                  ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' 
+                                  : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
+                              }`}>
+                                {rec.status_label}
+                              </span>
+                            </div>
 
-                          <div className="pt-1.5 flex items-center justify-between text-[11px]">
-                            <span className="text-slate-500 text-[10px]">
-                              Difficulty: <span className="text-slate-300">{rec.difficulty}</span>
-                            </span>
-                            {rec.url ? (
-                              <a 
-                                href={rec.url} 
-                                target="_blank" 
-                                rel="noreferrer"
-                                className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-purple-600 text-white font-bold text-[11px] hover:bg-purple-500 transition-colors shadow-sm"
-                              >
-                                Solve Problem <ExternalLink className="h-3 w-3" />
-                              </a>
-                            ) : (
-                              <span className="text-slate-500 text-[10px]">Connector Pending</span>
-                            )}
+                            <h4 className="text-white font-bold text-xs leading-snug">
+                              {rec.title}
+                            </h4>
+                            
+                            <p className="text-slate-400 text-[11px] leading-relaxed">
+                              {rec.reason}
+                            </p>
+
+                            <div className="pt-1.5 flex items-center justify-between text-[11px] gap-2 flex-wrap">
+                              {isSoftFallback ? (
+                                <div className="flex items-center gap-1.5 flex-wrap text-[10px]">
+                                  <span className="text-slate-400">
+                                    Target: <span className="text-slate-200 font-semibold">{targetDiff}</span>
+                                  </span>
+                                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[9px] font-bold">
+                                    Closest Available: {rec.difficulty}
+                                  </span>
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-1.5 text-[10px]">
+                                  <span className="text-slate-400">
+                                    Target: <span className="text-slate-200 font-semibold">{targetDiff}</span>
+                                  </span>
+                                  <span className="text-slate-500">·</span>
+                                  <span className="text-slate-400">
+                                    Difficulty: <span className="text-slate-200 font-semibold">{rec.difficulty}</span>
+                                  </span>
+                                </div>
+                              )}
+
+                              {rec.url ? (
+                                <a 
+                                  href={rec.url} 
+                                  target="_blank" 
+                                  rel="noreferrer"
+                                  className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-purple-600 text-white font-bold text-[11px] hover:bg-purple-500 transition-colors shadow-sm"
+                                >
+                                  Solve Problem <ExternalLink className="h-3 w-3" />
+                                </a>
+                              ) : (
+                                <span className="text-slate-500 text-[10px]">Connector Pending</span>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   ) : (
                     <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-center font-mono text-xs text-slate-400 space-y-1">
